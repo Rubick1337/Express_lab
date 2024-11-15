@@ -1,3 +1,4 @@
+const { error } = require("console");
 const fs = require("fs");
 const path = require("path");
 const bike_path = path.join(__dirname, "../data", "bikes.json");
@@ -83,4 +84,35 @@ exports.addBike = (req, res) => {
         });
     });
 
+};
+
+//DELETE-сервис для отмены или удаления каких-то данных;
+exports.deleteBike = (req, res) => {
+    const { id } = req.body; 
+    if (!id) {
+        return res.status(400).json({ message: "Введите ID" });
+    }
+
+    const indexToRemove = parseInt(id) - 1;
+
+    fs.readFile(bike_path, (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: "Ошибка чтения файла" });
+        }
+
+        let bikes = JSON.parse(data);
+
+
+        if (indexToRemove >= 0 && indexToRemove < bikes.length) {
+            const deleteBike = bikes.splice(indexToRemove, 1)[0];
+
+
+            fs.writeFile(bike_path, JSON.stringify(bikes, null, 2), (err) => {
+                if (err) {
+                    return res.status(500).json({ error: "Ошибка записи файла" });
+                } 
+            });
+        }
+        res.status(200).json({message:"Велосипед успешно удален"}) 
+    });
 };

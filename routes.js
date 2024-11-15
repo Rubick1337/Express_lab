@@ -14,4 +14,5 @@ router.post("/addbike", BikeController.addBike);
 // Маршрут для получения статистики
 router.post("/statistics", StatisticController.getStatistics);
 
+router.delete("/deletebike",BikeController.deleteBike)
 module.exports = router;

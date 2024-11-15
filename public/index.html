@@ -112,7 +112,26 @@
 }
 
 document.getElementById("button").addEventListener("click", AddBike);
+function DeleteBike(event) {
+    event.preventDefault();  // предотвращаем стандартное поведение формы
 
+    const id_deleted = document.getElementById("id_delete").value;
+
+    fetch("/deletebike", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: id_deleted }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            BikeProjects();
+            BikeStatistics();
+        });
+}
+
+document.getElementById("button_delete").addEventListener("click", DeleteBike);
 
         BikeProjects();
         BikeStatistics();
