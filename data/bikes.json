@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "model": "MBX1000",
+    "type": "Mountain"
+  },
+  {
+    "id": 2,
+    "model": "RBX2000",
+    "type": "Road"
+  },
+  {
+    "id": 3,
+    "model": "HBX3000",
+    "type": "Hybrid"
+  }
+]

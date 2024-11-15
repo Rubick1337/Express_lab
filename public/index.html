@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="index.css" />
+        <title>Bike Projects</title>
+    </head>
+    <body>
+        <p class="text40">Bike Projects</p>
+        <ul id="projects"></ul>
+        <div class="line"></div>
+        <p class="text40">Statistics</p>
+        <div id="statistics"></div>
+        <form class="form_add">
+            <label>Model</label>
+            <input id="input" type="text" />
+            <label>Type</label>
+            <select id="select">
+                <option value="mountain">Mountain</option>
+                <option value="road">Road</option>
+                <option value="hybrid">Hybrid</option>
+            </select>
+            <button id="button" type="submit">Add Bike</button>
+        </form>
+        <form class="delete">
+            <label>Id to delete</label>
+            <input id="id_delete" type="number" min="0" step="1" />
+            <button id="button_delete">Delete Bike</button>
+        </form>
+        <div class="download">
+            <button id="download_json">Download JSON</button>
+            <button id="download_xml">Download XML</button>
+            <button id="download_html">Download HTML</button>
+        </div>
+    </body>
+    <script>
+        document.getElementById("download_json").addEventListener("click", () => {
+                event.preventDefault();
+                window.location.href = "/download/bikes/json";
+            });
+
+        document.getElementById("download_xml").addEventListener("click", () => {
+                event.preventDefault();
+                window.location.href = "/download/bikes/xml";
+            });
+
+        document.getElementById("download_html").addEventListener("click", () => {
+                event.preventDefault();
+                window.location.href = "/download/bikes/html";
+            });
+
+        function BikeProjects() {
+            fetch("/bikes")
+                .then((response) => response.json())
+                .then((data) => {
+                    const ul = document.getElementById("projects");
+                    ul.innerHTML = "";
+                    data.forEach((bike, index) => {
+                        const li = document.createElement("li");
+                        li.className = "text_li";
+                        li.textContent = `${index + 1}. ${bike.model} | ${bike.type}`;
+                        ul.appendChild(li);
+                    });
+                })
+                .catch((error) =>
+                    console.error("Error loading bikes: ", error)
+                );
+        }
+
+        function BikeStatistics() {
+            fetch("/statistics", { method: "POST" })
+                .then((response) => response.json())
+                .then((data) => {
+                    const div = document.getElementById("statistics");
+                    div.innerHTML = "";
+                    data.forEach((statistic) => {
+                        const p = document.createElement("p");
+                        p.className = "text_stat";
+                        p.textContent = `${statistic.direction} - ${statistic.count}`;
+                        div.appendChild(p);
+                    });
+                })
+                .catch((error) =>
+                    console.error("Error loading statistics: ", error)
+                );
+        }
+
+        function AddBike() {
+    event.preventDefault(); 
+
+    const selected = document.getElementById("select").value;  
+    const inputed = document.getElementById("input").value;   
+
+    fetch("/addbike", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ model: inputed, type: selected }),  
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.error) {
+                console.error(data.error);  
+            } else {
+                BikeProjects();  
+                BikeStatistics();  
+            }
+        })
+        .catch((error) => console.error("Ошибка при добавлении велосипеда:", error));
+}
+
+document.getElementById("button").addEventListener("click", AddBike);
+
+
+        BikeProjects();
+        BikeStatistics();
+    </script>
+</html>

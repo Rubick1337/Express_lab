@@ -1,0 +1,14 @@
+[
+  {
+    "direction": "Mountain",
+    "count": "124"
+  },
+  {
+    "direction": "Road",
+    "count": "2"
+  },
+  {
+    "direction": "Hybrid",
+    "count": "4"
+  }
+]
